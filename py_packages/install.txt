@@ -1,0 +1,42 @@
+@echo off
+echo 开始离线安装Python依赖包...
+echo.
+
+REM 检查文件是否存在
+if not exist "offline_packages" (
+    echo 错误：找不到 offline_packages 目录！
+    echo 请确保已从有网络的电脑复制了完整的文件夹
+    pause
+    exit
+)
+
+if not exist "requirements.txt" (
+    echo 错误：找不到 requirements.txt 文件！
+    pause
+    exit
+)
+
+REM 离线安装
+echo 正在安装依赖包...
+py -m pip install --no-index --find-links offline_packages -r requirements.txt
+
+echo.
+echo 安装完成！正在验证安装...
+echo.
+
+REM 验证安装
+py -c "
+try:
+    import pyautogui
+    import pyperclip  
+    import PIL
+    import cv2
+    import numpy
+    print('✅ 所有依赖包安装成功！')
+    print(f'屏幕尺寸: {pyautogui.size()}')
+    print('程序可以正常运行了！')
+except ImportError as e:
+    print(f'❌ 安装验证失败: {e}')
+"
+
+pause
